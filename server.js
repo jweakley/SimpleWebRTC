@@ -1,19 +1,15 @@
 // silly chrome wants SSL to do screensharing
-var fs = require('fs'),
-    express = require('express'),
-    https = require('https'),
-    http = require('http');
-
-
-var privateKey = fs.readFileSync('fakekeys/privatekey.pem').toString(),
-    certificate = fs.readFileSync('fakekeys/certificate.pem').toString();
+var express = require('express');
 
 
 var app = express();
 
-app.use(express.static(__dirname));
+process.env.PWD = process.cwd();
 
-https.createServer({key: privateKey, cert: certificate}, app).listen(8000);
-http.createServer(app).listen(8001);
+app.use(express.static(process.env.PWD));
 
-console.log('running on https://localhost:8000 and http://localhost:8001');
+var port = process.env.PORT || 5000;
+
+app.listen(port, function() {
+  console.log("Listening on " + port);
+});
